@@ -1,0 +1,13 @@
+.idea
+target
+
+*.rdb
+
+node_modules
+
+out/
+
+/.gradle/
+/build/
+/app/build/
+

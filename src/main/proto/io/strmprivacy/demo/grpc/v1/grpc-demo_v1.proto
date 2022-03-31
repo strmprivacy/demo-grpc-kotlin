@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package io.strmprivacy.demo.grpc.v1;
+
+option java_package = "io.strmprivacy.demo.grpc.v1";
+option java_multiple_files = true;
+
+service GrpcDemoService {
+    rpc HelloWorld(HelloWorldRequest) returns (HelloWorldResponse);
+    rpc HelloWorldReqStreaming(stream HelloWorldRequest) returns (HelloWorldResponse);
+    rpc HelloWorldResStreaming(HelloWorldRequest) returns (stream HelloWorldResponse);
+    rpc HelloWorldBiStreaming(stream HelloWorldRequest) returns (stream HelloWorldResponse);
+}
+
+message HelloWorldRequest {
+    string name = 1;
+}
+
+message HelloWorldResponse {
+    string message = 1;
+}
