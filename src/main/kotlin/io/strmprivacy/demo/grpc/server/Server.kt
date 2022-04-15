@@ -8,7 +8,6 @@ import io.strmprivacy.demo.grpc.v1.HelloWorldResponse
 import io.strmprivacy.demo.grpc.v1.helloWorldResponse
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 fun main() {
@@ -24,42 +23,16 @@ fun main() {
 
 object Server : GrpcDemoServiceGrpcKt.GrpcDemoServiceCoroutineImplBase() {
 
-    private val names = mutableListOf<String>()
-
     override suspend fun helloWorld(request: HelloWorldRequest): HelloWorldResponse {
-        names += request.name
         return sayHelloResponse(request.name)
-    }
-
-    override suspend fun helloWorldReqStreaming(requests: Flow<HelloWorldRequest>): HelloWorldResponse {
-        requests.collect { request ->
-            names += request.name
-        }
-        return sayHelloResponse(names.lastOrNull() ?: "unknown")
     }
 
     override fun helloWorldResStreaming(request: HelloWorldRequest): Flow<HelloWorldResponse> {
         return flow {
-            names += request.name
-
-            names.forEach { name ->
-                emit(sayHelloResponse(name))
+            request.name.forEach { name ->
+                emit(sayHelloResponse(name.toString()))
                 delay(1000)
             }
-        }
-    }
-
-    override fun helloWorldBiStreaming(requests: Flow<HelloWorldRequest>): Flow<HelloWorldResponse> {
-        return flow {
-            requests.collect { request ->
-                names += request.name
-            }
-
-            names.forEach { name ->
-                emit(sayHelloResponse(name))
-                delay(1000)
-            }
-
         }
     }
 
