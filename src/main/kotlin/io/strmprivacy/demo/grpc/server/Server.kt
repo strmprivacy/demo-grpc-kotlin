@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 fun main() {
     val server = ServerBuilder
         .forPort(50051)
-        .addService(Server)
+        .addService(GrpcDemoService)
         .addService(ProtoReflectionService.newInstance())
         .build()
         .start()
@@ -21,7 +21,7 @@ fun main() {
     server.awaitTermination()
 }
 
-object Server : GrpcDemoServiceGrpcKt.GrpcDemoServiceCoroutineImplBase() {
+object GrpcDemoService : GrpcDemoServiceGrpcKt.GrpcDemoServiceCoroutineImplBase() {
 
     override suspend fun helloWorld(request: HelloWorldRequest): HelloWorldResponse {
         return sayHelloResponse(request.name)
