@@ -1,3 +1,3 @@
 mkdir -p build
-rm -r build/*
+rm -rf build/*
 protoc *.proto --java_out=build
