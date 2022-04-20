@@ -24,21 +24,20 @@ fun main() {
 object GrpcDemoService : GrpcDemoServiceGrpcKt.GrpcDemoServiceCoroutineImplBase() {
 
     override suspend fun helloWorld(request: HelloWorldRequest): HelloWorldResponse {
-        return sayHelloResponse(request.name)
+        return helloWorldResponse {
+            message = "Hello ${request.name}!"
+        }
     }
 
     override fun helloWorldResStreaming(request: HelloWorldRequest): Flow<HelloWorldResponse> {
         return flow {
             request.name.forEach { name ->
-                emit(sayHelloResponse(name.toString()))
+                emit(helloWorldResponse {
+                    message = "Hello $name!"
+                })
                 delay(1000)
             }
         }
     }
 
-    private fun sayHelloResponse(name: String) = helloWorldResponse {
-        message = sayHello(name)
-    }
-
-    private fun sayHello(name: String) = "Hello $name!"
 }
