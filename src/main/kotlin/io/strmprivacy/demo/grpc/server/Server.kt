@@ -2,6 +2,7 @@ package io.strmprivacy.demo.grpc.server
 
 import io.grpc.ServerBuilder
 import io.grpc.protobuf.services.ProtoReflectionService
+import io.strmprivacy.demo.grpc.v1.GrpcDemoServiceGrpc
 import io.strmprivacy.demo.grpc.v1.GrpcDemoServiceGrpcKt
 import io.strmprivacy.demo.grpc.v1.HelloWorldRequest
 import io.strmprivacy.demo.grpc.v1.HelloWorldResponse
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 
 fun main() {
     val server = ServerBuilder
-        .forPort(50051)
+        .forPort(50051) // Default gRPC port
         .addService(GrpcDemoService)
         .addService(ProtoReflectionService.newInstance())
         .build()
@@ -24,9 +25,9 @@ fun main() {
 object GrpcDemoService : GrpcDemoServiceGrpcKt.GrpcDemoServiceCoroutineImplBase() {
 
     override suspend fun helloWorld(request: HelloWorldRequest): HelloWorldResponse {
-        return helloWorldResponse {
-            message = "Hello ${request.name}!"
-        }
+        return HelloWorldResponse.newBuilder()
+            .setMessage("Hello ${request.name}")
+            .build()
     }
 
     override fun helloWorldResStreaming(request: HelloWorldRequest): Flow<HelloWorldResponse> {
